@@ -1,20 +1,5 @@
 template:
   select:
-    - name: vacuum_speed
-      state: >
-        {% set fan_speed = state_attr('vacuum.morty', 'fan_speed') %}
-        {{ 'Standard' if fan_speed == None else fan_speed }}
-      options: >
-        {% set fan_speed_list = state_attr('vacuum.morty', 'fan_speed_list') %}
-        {{ ['Standard'] if fan_speed_list == None else fan_speed_list }}
-      select_option:
-        service: vacuum.set_fan_speed
-        target:
-          entity_id: vacuum.morty
-        data:
-          fan_speed: >
-            {{ option }}
-
     - name: hdmi_bravia
       state: >
         {% set source = state_attr('media_player.sony_bravia_tv', 'source') %}
@@ -195,13 +180,6 @@ template:
           {% if mailbox | int(default=0) > 0 %}
             {{ '\U0001F4EC' }} <font color='#6a7377'><b>Brevlåda ({{ mailbox }})</b></font>
           {% endif %}
-        vacuum: |
-          {% set entity_id = 'vacuum.morty' %}
-          {%- if is_state(entity_id, 'cleaning') -%}
-            <b>Morty dammsuger</b>
-          {%- elif is_state(entity_id, 'returning') -%}
-            <b>Morty är färdig</b>
-          {%- endif %}
         weather: |
           {%- set temperature = states('sensor.dark_sky_temperature') %}
           {%- set apparent = states('sensor.dark_sky_apparent_temperature') | round %}
