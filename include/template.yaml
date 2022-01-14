@@ -31,11 +31,6 @@ template:
             {{ option }}
 
   binary_sensor:
-    - unique_id: laundry_time_trigger
-      state: >
-        {% set start_time = state_attr('calendar.tvatta', 'start_time') %}
-        {{ as_timestamp(start_time) - as_timestamp(now()) < 10 * 60 if start_time != None }}
-
     - unique_id: sidebar_update_color
       state: >
         {% set installed = states('sensor.hass_version_installed') %}
@@ -192,32 +187,6 @@ template:
             {%- endif %}
           {%- else %}
             Kan inte läsa in väderinformation...
-          {%- endif %}
-        transport: |
-          {{ states('sensor.skanetrafiken') }}
-        laundry: |
-          {%- set start_time = state_attr('calendar.tvatta', 'start_time') %}
-          {% if start_time != None %}
-            {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
-            {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
-            {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
-            {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A') 
-            | replace('Monday', 'Måndag')
-            | replace('Tuesday', 'Tisdag')
-            | replace('Wednesday', 'Onsdag')
-            | replace('Thursday', 'Torsdag')
-            | replace('Friday', 'Fredag')
-            | replace('Saturday', 'Lördag')
-            | replace('Sunday', 'Söndag') %}
-            {%- if count <= 0.0 -%}
-              {{'\U0001F4A6'}} Tvätt idag {{ time }}
-            {%- elif count <= 1.0 -%}
-              Tvätt imorgon klockan {{ time }}
-            {%- elif count <= 2.0 -%}
-              Tvätt i övermorgon klockan {{ time }}
-            {%- else -%}
-              Tvätt om {{ (count + hours) | round }} dagar på {{ day }} kl {{ time }}
-            {%- endif %}
           {%- endif %}
         battery: |
           {% set entities = states.sensor 

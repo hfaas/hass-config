@@ -100,11 +100,6 @@ google:
 browser_mod:
   prefix: browser_
 
-timer:
-  laundry:
-    duration: 01:00:00
-    icon: mdi:washing-machine
-
 ios:
   push:
     categories:

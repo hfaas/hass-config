@@ -60,15 +60,6 @@ views:
             entity: sensor.template_sidebar
             template: sidebar_template
 
-          - type: conditional
-            conditions:
-              - entity: input_boolean.laundry_display
-                state: 'on'
-            card:
-              type: custom:button-card
-              entity: timer.laundry
-              template: laundry
-
           - type: grid
             cards:
               - type: button
