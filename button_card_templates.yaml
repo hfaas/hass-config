@@ -160,6 +160,111 @@
 
   #################################################
   #                                               #
+  #                     FLOW                      #
+  #                                               #
+  #################################################
+
+  flow:
+    variables:
+    aspect_ratio: 1/1
+    show_state: false
+    show_icon: false
+    tap_action:
+      animation_card: |
+        [[[
+          let time = 900;
+          this.shadowRoot.getElementById('card').style.animation =
+            `card_bounce ${time}ms cubic-bezier(0.22, 1, 0.36, 1)`,
+            window.setTimeout(() => {
+              this.shadowRoot.getElementById('card').style.animation = 'none'
+            }, time);
+        ]]]
+      action: toggle
+      haptic: medium
+    styles:
+      grid:
+        - grid-template-areas: |
+            "icon  circle"
+            "n     n"
+            "s     s"
+        - grid-template-columns: repeat(2, 1fr)
+        - grid-template-rows: auto repeat(2, min-content)
+        - gap: 2%
+        - align-items: start
+      name:
+        - justify-self: start
+        - line-height: 115%
+      # state:
+      #   - justify-self: start
+      #   - line-height: 115%
+      card:
+        - font-family: Sf Display
+        - border-radius: var(--custom-button-card-border-radius)
+        - -webkit-tap-highlight-color: rgba(0,0,0,0)
+        - transition: none
+        - padding: 10%
+        - --mdc-ripple-color: >
+            [[[
+              return 'rgba(255, 255, 255, 0.3)';
+            ]]]
+        - color: >
+            [[[
+              return 'rgba(255, 255, 255, 0.3)';
+            ]]]
+        - background-color: >
+            [[[
+              return 'rgba(115, 115, 115, 0.2)';
+            ]]]
+    extra_styles: |
+      [[[
+        return `
+          svg {
+            --light-color:
+            ${ 'var(--state-icon-color);' }
+          }
+          #container {
+            text-align: left !important;
+          }
+          #name, #state {
+            font-size: 1.34vw;
+            letter-spacing: 0.05vw;
+          }
+          /* portrait */
+          @media screen and (max-width: 1200px) {
+            #name, #state {
+              font-size: 2vw;
+              letter-spacing: 0.05vw;
+            }
+          }
+          /* phone */
+          @media screen and (max-width: 800px) {
+            #name, #state {
+              font-size: 3.1vw;
+              letter-spacing: 0.12vw;
+            }
+          }
+          @keyframes card_bounce {
+            0% {
+              transform: scale(1);
+            }
+            15% {
+              transform: scale(0.9);
+            }
+            25% {
+              transform: scale(1);
+            }
+            30% {
+              transform: scale(0.98);
+            }
+            100% {
+              transform: scale(1);
+            }
+          }
+        `
+      ]]]
+
+  #################################################
+  #                                               #
   #                    SIDEBAR                    #
   #                                               #
   #################################################
@@ -237,63 +342,6 @@
         }
         #name {
           padding: 0 0 0 1vw;
-        }
-      }
-
-  #################################################
-  #                                               #
-  #                    FOOTER                     #
-  #                                               #
-  #################################################
-
-  coronavirus:
-    show_state: true
-    show_name: false
-    show_icon: false
-    tap_action:
-      action: none
-    state_display: >
-      [[[
-        if (entity && entity.attributes.embedCode != undefined) {
-          let data = entity.attributes.embedCode,
-            total = data.match(/Totalt[^,]*?(\d+)[^,]*?(\d+)[^,]*?(\d+)/),
-            spacer = '‍ ‍ ‍ ‍ ‍ ‍<font color="#2f3436">|</font> ‍ ‍ ‍ ‍ ';
-          return `
-            <ha-icon icon="mdi:virus"></ha-icon> <b>Coronavirus</b>${spacer}
-            <ha-icon icon="mdi:chart-bar"></ha-icon> <b>${(parseFloat(total[1]) / 10327589 * 100).toFixed(2)}%</b> av Sverige${spacer}
-            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>${total[1]}</b> fall${spacer}
-            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>${total[3]}</b> avlidna${spacer}
-            <ha-icon icon="mdi:map-marker-radius"></ha-icon> <b>${data.match(/Skåne[^,]*?(\d+)/)[1]}</b> fall i Skåne
-          `;
-        }
-      ]]]
-    styles:
-      state:
-        - place-self: start
-        - font-family: SF Display
-        - font-weight: 400
-        - font-size: 1.26vw
-        - letter-spacing: 0.05vw
-        - white-space: nowrap
-        - opacity: 0.6
-      card:
-        - background: none
-        - padding: 0
-        - margin-top: -1vw
-        - overflow: hidden
-    extra_styles: |
-      ha-icon {
-        vertical-align: 5%;
-        opacity: 0.4;
-        width: 1.2vw;
-      }
-      .ellipsis {
-        color: #6a7377;
-      }
-      /* phone */
-      @media screen and (max-width: 800px) {
-        #state {
-          display: none;
         }
       }
 
@@ -471,11 +519,122 @@
 
   #################################################
   #                                               #
-  #                     LIGHT                     #
+  #                   OLD LIGHT                   #
   #                                               #
   #################################################
 
   light:
+    template:
+      - base
+      - circle
+    variables:
+      circle_input: >
+        [[[ return entity === undefined || Math.round(entity.attributes.brightness / 2.54); ]]]
+    hold_action:
+      action: fire-dom-event
+      browser_mod:
+        command: popup
+        title: >
+          [[[ return entity.attributes.friendly_name; ]]]
+        card:
+          type: custom:light-popup-card
+          entity: >
+            [[[ return entity.entity_id ]]]
+          icon: none
+          fullscreen: false
+          brightnessWidth: 130px
+          brightnessHeight: 360px
+          borderRadius: 1.7em
+          sliderColor: '#c7c7c7'
+          sliderTrackColor: rgba(25, 25, 25, 0.9)
+          displayType: slider
+          actionSize: 4.5em
+          actionsInARow: 2
+          actions:
+            - action: call-service
+              service: light.turn_on
+              color: '#d8d9e1'
+              service_data:
+                entity_id: >
+                  [[[ return entity.entity_id ]]]
+                color_temp: 153
+            - action: call-service
+              service: light.turn_on
+              color: '#d5b08d'
+              service_data:
+                entity_id: >
+                  [[[ return entity.entity_id ]]]
+                color_temp: 326
+            - action: call-service
+              service: light.turn_on
+              color: '#ce944b'
+              service_data:
+                entity_id: >
+                  [[[ return entity.entity_id ]]]
+                color_temp: 500
+            - action: fire-dom-event
+              image: >-
+                data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 
+                50 50"%3E%3Cstyle%3Esvg%7Bbackground:radial-gradient(circle,rgba(255,255,
+                255,1) 0%25,rgba(255,255,255,0) 80%25),conic-gradient(%237827e6,%23e622e7,
+                %23e40588,%23e41919,%23e5691e,%23e8e22e,%237de629,%2334e828,%2333e75c,
+                %2334e8e0,%23207de5,%231227e5,%237827e6)%7D%3C/style%3E%3C/svg%3E
+              browser_mod:
+                command: popup
+                title: >
+                  [[[ return entity.attributes.friendly_name ]]]
+                card:
+                  type: custom:light-entity-card
+                  entity: >
+                    [[[ return entity.entity_id ]]]
+                  brightness: true
+                  color_temp: true
+                  full_width_sliders: false
+                  hide_header: true
+                  show_slider_percent: true
+                  smooth_color_wheel: true
+                  persist_features: true
+                  consolidate_entities: false
+
+  #################################################
+  #                                               #
+  #                DIMABLE LIGHT                  #
+  #                                               #
+  #################################################
+
+  light_dimable:
+    template:
+      - base
+      - circle
+    variables:
+      circle_input: >
+        [[[ return entity === undefined || Math.round(entity.attributes.brightness / 2.54); ]]]
+    hold_action:
+      action: fire-dom-event
+      browser_mod:
+        command: popup
+        title: >
+          [[[ return entity.attributes.friendly_name; ]]]
+        card:
+          type: custom:light-popup-card
+          entity: >
+            [[[ return entity.entity_id ]]]
+          icon: none
+          fullscreen: false
+          brightnessWidth: 130px
+          brightnessHeight: 360px
+          borderRadius: 1.7em
+          sliderColor: '#c7c7c7'
+          sliderTrackColor: rgba(25, 25, 25, 0.9)
+          displayType: slider
+
+  #################################################
+  #                                               #
+  #              MULTICOLOR LIGHT                 #
+  #                                               #
+  #################################################
+
+  light_rgbw:
     template:
       - base
       - circle
@@ -1873,6 +2032,209 @@
                 }
               </style>
               <path class="${state}" d="M42.2 28.3c0-.8-.2-1-.2-1L26 12.1s-.5-.4-1-.4-1 .3-1 .3L8.2 27.1c-.4.5-.4.9-.4.9v18.3c0 1.1.9 2 1.9 2h8.2a1.47 1.47 0 0 0 1.5-1.5v-14a1.47 1.47 0 0 1 1.5-1.5h8.4a1.47 1.47 0 0 1 1.5 1.5v14a1.47 1.47 0 0 0 1.5 1.5h8.2c1.1 0 2-.9 2-1.9 0-.2-.3-18.1-.3-18.1zM7.3 25l-1.6 1.5s-.3.3-.5.3-.5 0-.8-.2c-.2-.2-2-2.8-2-2.8s-.1-.4-.1-.7c.1-.3.2-.7.3-.8.4-.1 21.5-20.1 21.5-20.1s.4-.3.9-.3c.4 0 .8.1.9.2s.5.4.5.4l8.9 8.5V6s.1-.4.2-.7c.1-.2.3-.3.4-.3s.3-.1.3-.1h3s.3.1.4.3a1.08 1.08 0 0 1 .3.7v9.8l7.2 6.9s.2.3.3.4c.1.2.1.7.1.7 0 .1-.1.4-.2.5s-1.6 2.5-1.6 2.5-.1.3-.3.3c-.2.1-.4.1-.7 0-.2-.1-.5-.4-.5-.4L26.4 9.4s-.3-.3-.5-.4-.4-.2-.8-.2-.5.1-.8.1c-.1.1-.4.3-.7.5C23.3 9.8 7.3 25 7.3 25z"/>
+            </svg>
+          `;
+        ]]]
+
+  icon_movie:
+    styles:
+      custom_fields:
+        icon:
+          - width: 75%
+    custom_fields:
+      icon: >
+        <svg viewBox="0 0 24 24" fill="var(--light-color)">
+          <path d="M20.84 2.18L16.91 2.96L19.65 6.5L21.62 6.1L20.84 2.18M13.97 3.54L12 3.93L14.75 7.46L16.71 7.07L13.97 3.54M9.07 4.5L7.1 4.91L9.85 8.44L11.81 8.05L9.07 4.5M4.16 5.5L3.18 5.69A2 2 0 0 0 1.61 8.04L2 10L6.9 9.03L4.16 5.5"/>
+          <path d="M2 10V20C2 21.11 2.9 22 4 22H20C21.11 22 22 21.11 22 20V10H2Z"/>
+        </svg>
+
+  icon_bed:
+    styles:
+      custom_fields:
+        icon:
+          - width: 75%
+    custom_fields:
+      icon: >
+        <svg viewBox="0 0 24 24" fill="var(--light-color)">
+          <path d="M19,7H11V14H3V5H1V20H3V17H21V20H23V11A4,4 0 0,0 19,7M7,13A3,3 0 0,0 10,10A3,3 0 0,0 7,7A3,3 0 0,0 4,10A3,3 0 0,0 7,13Z"/>
+        </svg>
+
+  icon_all_off:
+    styles:
+      custom_fields:
+        icon:
+          - width: 75%
+    custom_fields:
+      icon: >
+        <svg viewBox="0 0 24 24" fill="var(--light-color)">
+          <path d="M13,3H11V13H13V3M17.83,5.17L16.41,6.59C18.05,7.91 19,9.9 19,12A7,7 0 0,1 12,19C8.14,19 5,15.88 5,12C5,9.91 5.95,7.91 7.58,6.58L6.17,5.17C2.38,8.39 1.92,14.07 5.14,17.86C8.36,21.64 14.04,22.1 17.83,18.88C19.85,17.17 21,14.65 21,12C21,9.37 19.84,6.87 17.83,5.17Z"/>
+        </svg>
+
+  icon_curtains:
+    styles:
+      custom_fields:
+        icon:
+          - width: 75%
+    custom_fields:
+      icon: >
+        <svg viewBox="0 0 24 24" fill="var(--light-color)">
+          <path d="M23 3H1V1H23V3M2 22H6C6 19 4 17 4 17C10 13 11 4 11 4H2V22M22 4H13C13 4 14 13 20 17C20 17 18 19 18 22H22V4Z"/>
+        </svg>
+
+  icon_lamp_table:
+    styles:
+      custom_fields:
+        icon:
+          - width: 82%
+          - margin-left: -10%
+          - margin-top: -8%
+    custom_fields:
+      icon: >
+        [[[
+          let state = variables.state === 'on' && variables.timeout < 2000 ? 'on' : null;
+          return `
+            <svg viewBox="0 0 50 50">
+              <style>
+                @keyframes on {
+                  0% {
+                    transform: scale(0.85);
+                  }
+                  20% {
+                    transform: scale(1.1);
+                  }
+                  40% {
+                    transform: scale(0.95);
+                  }
+                  60% {
+                    transform: scale(1.03);
+                  }
+                  80% {
+                    transform: scale(0.97);
+                  }
+                  100% {
+                    transform: scale(1);
+                  }
+                }
+                .on {
+                  animation: on 0.8s;
+                  transform-origin: bottom;
+                }
+              </style>
+              <path fill="#9da0a2" d="m 36.747477,9.43817 h -23.4 c -0.1,0 -0.1,0 -0.1,0.09277 0.01091,1.584101 1.392457,2.855521 3.1,2.865645 h 3.772447 c 0.1,0 0.09422,-0.01024 0.09422,0.08252 V 38.31183 H 21.18081 V 12.479105 c 2.26e-4,-0.08562 -0.0035,-0.08752 0.08271,-0.08252 h 7.562568 c 0.08795,0.0021 0.08996,-0.01384 0.08806,0.08252 V 38.31183 h 0.966666 V 12.479105 c 0,-0.09277 0.0054,-0.08252 0.105469,-0.08252 h 1.880594 1.8806 c 1.7,0.09277 3.1,-1.28854 3,-2.958415 z"/>
+              <path class="${state}" fill="var(--light-color)" d="m 46.362458,44.584083 c 0,0 1.079081,-0.02956 1.079081,-2.30286 0,-2.273304 -1.079081,-2.30286 -1.079081,-2.30286 H 3.7610077 c 0,0 -1.2080524,-0.06362 -1.202528,2.30286 0.00552,2.366482 1.202528,2.30286 1.202528,2.30286 z"/>
+            </svg>
+          `;
+        ]]]
+    
+  icon_nanoleaf:
+    styles:
+      custom_fields:
+        icon:
+          - width: 80%
+          - margin-left: -6%
+          - margin-top: -5%
+    custom_fields:
+      icon: >
+        [[[
+          let state = variables.state === 'on' && variables.timeout < 2000 ? 'on' : null;
+          return `
+            <svg viewBox="0 0 50 50">
+              <style>
+                @keyframes on {
+                  0% {
+                    transform: scale(0.85);
+                  }
+                  20% {
+                    transform: scale(1.1);
+                  }
+                  40% {
+                    transform: scale(0.95);
+                  }
+                  60% {
+                    transform: scale(1.03);
+                  }
+                  80% {
+                    transform: scale(0.97);
+                  }
+                  100% {
+                    transform: scale(1);
+                  }
+                }
+                .on {
+                  animation: on 0.8s;
+                  transform-origin: center;
+                }
+              </style>
+              <rect
+                 class="${state}" fill="var(--light-color)"
+                 width="12.5"
+                 height="12.5"
+                 x="5.1999989"
+                 y="37.436207"/>
+              <rect
+                 class="${state}" fill="var(--light-color)"
+                 width="12.5"
+                 height="12.5"
+                 x="12.149999"
+                 y="24.23621"/>
+              <rect
+                 class="${state}" fill="var(--light-color)"
+                 width="12.5"
+                 height="12.5"
+                 x="25.350004"
+                 y="17.286209"/>
+              <rect
+                 class="${state}" fill="var(--light-color)"
+                 width="12.5"
+                 height="12.5"
+                 x="32.300003"
+                 y="4.0862107"/>
+            </svg>
+          `;
+        ]]]
+        
+  icon_bloom:
+    styles:
+      custom_fields:
+        icon:
+          - width: 70%
+          - margin-left: 0%
+          - margin-top: 0%
+    custom_fields:
+      icon: >
+        [[[
+          let state = variables.state === 'on' && variables.timeout < 2000 ? 'on' : null;
+          return `
+            <svg viewBox="0 0 50 50">
+              <style>
+                @keyframes on {
+                  0% {
+                    transform: scale(0.85);
+                  }
+                  20% {
+                    transform: scale(1.1);
+                  }
+                  40% {
+                    transform: scale(0.95);
+                  }
+                  60% {
+                    transform: scale(1.03);
+                  }
+                  80% {
+                    transform: scale(0.97);
+                  }
+                  100% {
+                    transform: scale(1);
+                  }
+                }
+                .on {
+                  animation: on 0.8s;
+                  transform-origin: center;
+                }
+              </style>
+              <path fill="#9da0a2" d="M 44.089888,41.65721 C 40.04988,39.848724 31.38819,34.793428 23.361054,26.8509 15.069522,18.665126 9.8027072,10.056316 8.1740116,6.1749462 7.856735,5.4240542 8.5335948,4.6520122 9.3373632,4.8529552 10.458414,5.1173532 11.94962,5.6567262 13.832138,6.6614382 24.302312,12.266685 37.96642,25.740428 43.66685,36.083692 c 0.99414,1.808486 1.522936,3.320842 1.776758,4.494772 0.16922,0.761466 -0.634556,1.396024 -1.35372,1.078746 m 2.168066,-6.980118 C 40.2614,23.794456 26.269438,10.003437 15.238737,4.0914882 11.886166,2.3041552 9.2421806,1.6484462 7.3279368,1.6484462 c 0,0 -1.2162332,-0.02115 -2.1469156,0.349005 -2.4430419,1.047019 -3.7861838,3.913098 -3.7861838,10.1846268 0,7.667553 3.22566,15.134164 8.24923,21.268206 l -7.931953,11.81332 c -0.88837805,1.30084 0.05288,3.056444 1.6286954,3.04587 l 12.9978242,-0.0423 c 1.311416,0 2.538225,-0.65571 3.267963,-1.734454 l 1.977701,-2.929538 c 5.213934,2.992988 10.92494,4.748594 16.487884,4.748594 4.727444,0 7.762734,-1.131624 9.719286,-3.088172 1.152776,-1.06817 1.512356,-5.055296 -1.533514,-10.586512"/>
+              <path
+                 class="${state}" fill="var(--light-color)" d="M 42.358926,39.819562 C 38.72292,38.191926 31.07528,33.134684 23.846794,25.990524 16.388476,18.619213 11.501866,11.37817 10.034637,7.8855272 c -0.284147,-0.676393 0.322241,-1.365013 1.047016,-1.189792 1.0076,0.243595 2.869599,1.082893 4.512707,2.077067 9.261394,5.6036698 20.21735,16.6651958 25.900782,25.6746618 0.990968,1.570898 1.851304,3.34521 2.082132,4.401228 0.14992,0.685844 -0.5711,1.25642 -1.218348,0.97087"/>
             </svg>
           `;
         ]]]

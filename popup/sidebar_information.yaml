@@ -136,275 +136,275 @@ browser_mod:
                     entity_id: script.homeassistant_restart
                 template: icon_name
 
-      #################################################
-      #                                               #
-      #                    TABLET                     #
-      #                                               #
-      #################################################
+      # #################################################
+      # #                                               #
+      # #                    TABLET                     #
+      # #                                               #
+      # #################################################
 
-      - type: entities
-        view_layout:
-          grid-area: tablet
-        title: Galaxy Tab A 10.1
-        show_header_toggle: false
-        card_mod:
-          class: header
-          style: |
-            ha-card {
-              margin: 0px !important;
-            }
-        entities:
-          - entity: switch.galaxy_tab_a_screensaver
+      # - type: entities
+      #   view_layout:
+      #     grid-area: tablet
+      #   title: Galaxy Tab A 10.1
+      #   show_header_toggle: false
+      #   card_mod:
+      #     class: header
+      #     style: |
+      #       ha-card {
+      #         margin: 0px !important;
+      #       }
+      #   entities:
+      #     - entity: switch.galaxy_tab_a_screensaver
 
-          - entity: light.galaxy_tab_a_screen
+      #     - entity: light.galaxy_tab_a_screen
 
-          - type: custom:slider-entity-row
-            entity: light.galaxy_tab_a_screen
-            name: Ljusstyrka
-            icon: mdi:brightness-6
-            hide_state: false
+      #     - type: custom:slider-entity-row
+      #       entity: light.galaxy_tab_a_screen
+      #       name: Ljusstyrka
+      #       icon: mdi:brightness-6
+      #       hide_state: false
 
-          - entity: binary_sensor.galaxy_tab_a_plugged_in
+      #     - entity: binary_sensor.galaxy_tab_a_plugged_in
 
-          - entity: sensor.template_fullykiosk_last_app_start
+      #     - entity: sensor.template_fullykiosk_last_app_start
 
-          - type: custom:bar-card
-            width: 55%
-            height: 2em
-            decimal: 0
-            unit_of_measurement: '%'
-            positions: *bar_card_positions
-            severity:
-              - color: '#6d2525'
-                from: 0
-                to: 89
-              - color: '#303435'
-                from: 90
-                to: 100
-            entity_row: true
-            entities:
+      #     - type: custom:bar-card
+      #       width: 55%
+      #       height: 2em
+      #       decimal: 0
+      #       unit_of_measurement: '%'
+      #       positions: *bar_card_positions
+      #       severity:
+      #         - color: '#6d2525'
+      #           from: 0
+      #           to: 89
+      #         - color: '#303435'
+      #           from: 90
+      #           to: 100
+      #       entity_row: true
+      #       entities:
 
-              - entity: sensor.galaxy_tab_a_battery_level
-                icon: mdi:battery
+      #         - entity: sensor.galaxy_tab_a_battery_level
+      #           icon: mdi:battery
 
-          - type: custom:bar-card
-            width: 55%
-            height: 2em
-            decimal: 0
-            unit_of_measurement: '%'
-            positions: *bar_card_positions
-            severity: *bar_card_severity
-            entity_row: true
-            entities:
+      #     - type: custom:bar-card
+      #       width: 55%
+      #       height: 2em
+      #       decimal: 0
+      #       unit_of_measurement: '%'
+      #       positions: *bar_card_positions
+      #       severity: *bar_card_severity
+      #       entity_row: true
+      #       entities:
 
-              - entity: sensor.template_fullykiosk_memory
-                name: Minne - 2GB
-                icon: mdi:memory
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.template_fullykiosk_memory
+      #         - entity: sensor.template_fullykiosk_memory
+      #           name: Minne - 2GB
+      #           icon: mdi:memory
+      #           tap_action:
+      #             action: call-service
+      #             service: homeassistant.update_entity
+      #             service_data:
+      #               entity_id: sensor.template_fullykiosk_memory
 
-              - entity: sensor.template_fullykiosk_storage
-                name: Lagring - 32GB
-                icon: mdi:sd
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.template_fullykiosk_storage
+      #         - entity: sensor.template_fullykiosk_storage
+      #           name: Lagring - 32GB
+      #           icon: mdi:sd
+      #           tap_action:
+      #             action: call-service
+      #             service: homeassistant.update_entity
+      #             service_data:
+      #               entity_id: sensor.template_fullykiosk_storage
 
-          - type: custom:hui-horizontal-stack-card
-            cards:
-              - type: custom:button-card
-                name: Startsidan
-                icon: mdi:reload
-                tap_action:
-                  services: |
-                    [[[
-                      hass.callService('browser_mod', 'toast', {
-                        message: 'Laddar om startsidan...'
-                      });
-                      hass.callService('fullykiosk', 'load_start_url', {
-                        entity_id: 'media_player.galaxy_tab_a_media_player'
-                      });
-                    ]]]
-                template: icon_name
+      #     - type: custom:hui-horizontal-stack-card
+      #       cards:
+      #         - type: custom:button-card
+      #           name: Startsidan
+      #           icon: mdi:reload
+      #           tap_action:
+      #             services: |
+      #               [[[
+      #                 hass.callService('browser_mod', 'toast', {
+      #                   message: 'Laddar om startsidan...'
+      #                 });
+      #                 hass.callService('fullykiosk', 'load_start_url', {
+      #                   entity_id: 'media_player.galaxy_tab_a_media_player'
+      #                 });
+      #               ]]]
+      #           template: icon_name
 
-              - type: custom:button-card
-                name: Hela appen
-                icon: mdi:reload
-                tap_action:
-                  services: |
-                    [[[
-                      hass.callService('browser_mod', 'toast', {
-                        message: 'Startar om Fully Kiosk Browser...'
-                      });
-                      hass.callService('fullykiosk', 'restart', {
-                        entity_id: 'media_player.galaxy_tab_a_media_player'
-                      });
-                    ]]]
-                template: icon_name
+      #         - type: custom:button-card
+      #           name: Hela appen
+      #           icon: mdi:reload
+      #           tap_action:
+      #             services: |
+      #               [[[
+      #                 hass.callService('browser_mod', 'toast', {
+      #                   message: 'Startar om Fully Kiosk Browser...'
+      #                 });
+      #                 hass.callService('fullykiosk', 'restart', {
+      #                   entity_id: 'media_player.galaxy_tab_a_media_player'
+      #                 });
+      #               ]]]
+      #           template: icon_name
 
-      #################################################
-      #                                               #
-      #                      NAS                      #
-      #                                               #
-      #################################################
+      # #################################################
+      # #                                               #
+      # #                      NAS                      #
+      # #                                               #
+      # #################################################
 
-      - type: entities
-        view_layout:
-          grid-area: nas
-        title: Synology DS918+
-        show_header_toggle: false
-        card_mod:
-          class: header
-          style:
-            .: |
-              ha-card {
-                animation: none !important;
-                margin: 0px !important;
-              }
-            mini-graph-card:
-              $: |
-                ha-card {
-                  padding: 0px !important;
-                }
-            hui-horizontal-stack-card:
-              $:
-                .: |
-                  #root {
-                    margin-top: 1em;
-                    margin-right: 1.5em;
-                  }
-                  #root > * {
-                    flex: none !important;
-                  }
-                hui-entities-card:
-                  $:
-                    .: |
-                      #states {
-                        padding: 0;
-                      }
-                    hui-sensor-entity-row:
-                      $hui-generic-entity-row$: |
-                        .info {
-                          margin: 0 8px 0 8px !important;
-                        }
-        entities:
-          - entity: sensor.template_nas_status
+      # - type: entities
+      #   view_layout:
+      #     grid-area: nas
+      #   title: Synology DS918+
+      #   show_header_toggle: false
+      #   card_mod:
+      #     class: header
+      #     style:
+      #       .: |
+      #         ha-card {
+      #           animation: none !important;
+      #           margin: 0px !important;
+      #         }
+      #       mini-graph-card:
+      #         $: |
+      #           ha-card {
+      #             padding: 0px !important;
+      #           }
+      #       hui-horizontal-stack-card:
+      #         $:
+      #           .: |
+      #             #root {
+      #               margin-top: 1em;
+      #               margin-right: 1.5em;
+      #             }
+      #             #root > * {
+      #               flex: none !important;
+      #             }
+      #           hui-entities-card:
+      #             $:
+      #               .: |
+      #                 #states {
+      #                   padding: 0;
+      #                 }
+      #               hui-sensor-entity-row:
+      #                 $hui-generic-entity-row$: |
+      #                   .info {
+      #                     margin: 0 8px 0 8px !important;
+      #                   }
+      #   entities:
+      #     - entity: sensor.template_nas_status
 
-          - entity: binary_sensor.nas_security_status
-            name: Säkerhetsstatus
+      #     - entity: binary_sensor.nas_security_status
+      #       name: Säkerhetsstatus
 
-          - entity: sensor.nas_volume_1_average_disk_temp
+      #     - entity: sensor.nas_volume_1_average_disk_temp
 
-          - entity: sensor.last_boot
-            name: Senast omstart
+      #     - entity: sensor.last_boot
+      #       name: Senast omstart
 
-          - type: custom:bar-card
-            width: 55%
-            height: 2em
-            decimal: 0
-            unit_of_measurement: '%'
-            positions: *bar_card_positions
-            severity: *bar_card_severity
-            entity_row: true
-            entities:
+      #     - type: custom:bar-card
+      #       width: 55%
+      #       height: 2em
+      #       decimal: 0
+      #       unit_of_measurement: '%'
+      #       positions: *bar_card_positions
+      #       severity: *bar_card_severity
+      #       entity_row: true
+      #       entities:
 
-              - entity: sensor.processor_use_percent
-                name: Processor
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.processor_use_percent
+      #         - entity: sensor.processor_use_percent
+      #           name: Processor
+      #           tap_action:
+      #             action: call-service
+      #             service: homeassistant.update_entity
+      #             service_data:
+      #               entity_id: sensor.processor_use_percent
 
-              - entity: sensor.memory_use_percent
-                name: Minne - 4GB
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.memory_use_percent
+      #         - entity: sensor.memory_use_percent
+      #           name: Minne - 4GB
+      #           tap_action:
+      #             action: call-service
+      #             service: homeassistant.update_entity
+      #             service_data:
+      #               entity_id: sensor.memory_use_percent
 
-              - entity: sensor.disk_use_percent
-                name: Lagring - 10.5TB
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.disk_use_percent
+      #         - entity: sensor.disk_use_percent
+      #           name: Lagring - 10.5TB
+      #           tap_action:
+      #             action: call-service
+      #             service: homeassistant.update_entity
+      #             service_data:
+      #               entity_id: sensor.disk_use_percent
 
-        footer:
-          type: custom:apexcharts-card
-          layout: minimal
-          graph_span: 1h
-          locale: se
-          show:
-            loading: false
-          apex_config:
-            chart:
-              fontFamily: Roboto
-              height: 135px
-              offsetY: -20px
-            grid:
-              padding:
-                top: -20
-            tooltip:
-              style:
-                fontSize: 14px
-              x:
-                show: true
-                format: dddd HH:mm
-            xaxis:
-              crosshairs:
-                show: false
-            legend:
-              fontSize: 14px
-              fontWeight: 400
-              itemMargin:
-                horizontal: 25
-              formatter: |
-                EVAL:(seriesName, opts) => {
-                  var arr = opts.w.globals.series[opts.seriesIndex],
-                    value = arr[arr.length - 1],
-                    convert = (value / 1024).toFixed(2);
-                  if (value == null) {
-                    return seriesName;
-                  } else {
-                    return value < 1024 ? `${Math.round(value)} kB/s` : `${convert} MB/s`;
-                  }
-                }
-              markers:
-                width: 26
-                height: 23
-                customHTML:
-                  - 'EVAL:() => {return `<ha-icon icon="mdi:arrow-down-bold" style="--mdc-icon-size: 23px;"></ha-icon>`}'
-                  - 'EVAL:() => {return `<ha-icon icon="mdi:arrow-up-bold" style="--mdc-icon-size: 23px;"></ha-icon>`}'
-                fillColors:
-                  - none
-                  - none
-            fill:
-              type: gradient
-              gradient:
-                type: vertical
-                opacityFrom: 0.8
-                opacityTo: 0
-                stops:
-                  - 0
-                  - 99
-                  - 100
-            stroke:
-              width: 3
-          all_series_config:
-            type: area
-            fill_raw: last
-          series:
-            - entity: sensor.nas_network_down
-              name: Ned
-              color: green
-            - entity: sensor.nas_network_up
-              name: Upp
-              color: '#385581'
+      #   footer:
+      #     type: custom:apexcharts-card
+      #     layout: minimal
+      #     graph_span: 1h
+      #     locale: se
+      #     show:
+      #       loading: false
+      #     apex_config:
+      #       chart:
+      #         fontFamily: Roboto
+      #         height: 135px
+      #         offsetY: -20px
+      #       grid:
+      #         padding:
+      #           top: -20
+      #       tooltip:
+      #         style:
+      #           fontSize: 14px
+      #         x:
+      #           show: true
+      #           format: dddd HH:mm
+      #       xaxis:
+      #         crosshairs:
+      #           show: false
+      #       legend:
+      #         fontSize: 14px
+      #         fontWeight: 400
+      #         itemMargin:
+      #           horizontal: 25
+      #         formatter: |
+      #           EVAL:(seriesName, opts) => {
+      #             var arr = opts.w.globals.series[opts.seriesIndex],
+      #               value = arr[arr.length - 1],
+      #               convert = (value / 1024).toFixed(2);
+      #             if (value == null) {
+      #               return seriesName;
+      #             } else {
+      #               return value < 1024 ? `${Math.round(value)} kB/s` : `${convert} MB/s`;
+      #             }
+      #           }
+      #         markers:
+      #           width: 26
+      #           height: 23
+      #           customHTML:
+      #             - 'EVAL:() => {return `<ha-icon icon="mdi:arrow-down-bold" style="--mdc-icon-size: 23px;"></ha-icon>`}'
+      #             - 'EVAL:() => {return `<ha-icon icon="mdi:arrow-up-bold" style="--mdc-icon-size: 23px;"></ha-icon>`}'
+      #           fillColors:
+      #             - none
+      #             - none
+      #       fill:
+      #         type: gradient
+      #         gradient:
+      #           type: vertical
+      #           opacityFrom: 0.8
+      #           opacityTo: 0
+      #           stops:
+      #             - 0
+      #             - 99
+      #             - 100
+      #       stroke:
+      #         width: 3
+      #     all_series_config:
+      #       type: area
+      #       fill_raw: last
+      #     series:
+      #       - entity: sensor.nas_network_down
+      #         name: Ned
+      #         color: green
+      #       - entity: sensor.nas_network_up
+      #         name: Upp
+      #         color: '#385581'

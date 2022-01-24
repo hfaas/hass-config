@@ -35,6 +35,21 @@ template:
       attributes:
         friendly_name: VPN
 
+    # - unique_id: udm_internet
+    #   icon: mdi:wan
+    #   device_class: connectivity
+    #   state: >
+    #     {{ states('sensor.udm_unifios').split('|\n')[4] | default }}
+    #   attributes:
+    #     friendly_name: Internet
+
+    # - unique_id: udm_upgradable
+    #   icon: mdi:update
+    #   device_class: update
+    #   state: >
+    #     {{ states('sensor.udm_unifios').split('|\n')[7] | default }}
+    #   attributes:
+    #     friendly_name: Bijwerken
 
   sensor:
     - unique_id: sidebar
@@ -94,10 +109,14 @@ template:
             {%- if loop.first %} {{-'\u26A0\uFE0F'}} Batterij {% else %}, {% endif -%}
             {{ state_attr(sensor, 'friendly_name') }} {{ states(sensor) }}%
           {%- endfor %}
-        mathem: |
-          {%- set start_time = state_attr('calendar.mathem', 'start_time') %}
-          {%- set end_time = state_attr('calendar.mathem', 'end_time') %}
-          {% if start_time != None %}
+        picnic: |
+          {%- set start_time = states('sensor.picnic_last_order_eta_start') %}
+          {%- set end_time = states('sensor.picnic_last_order_eta_end') %}
+          {% if start_time == None or start_time == 'unknown' %}
+            {%- set start_time = states('sensor.picnic_last_order_slot_start') %}
+            {%- set end_time = states('sensor.picnic_last_order_slot_end') %}
+          {%- endif %}
+          {% if start_time != None and start_time != 'unknown' %}
             {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
             {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
             {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
@@ -125,6 +144,66 @@ template:
             Er is geen lopende bestelling bij Picnic
           {%- endif %}
 
+        # plex: |
+        #   {% if is_state('binary_sensor.plex_availability', 'off') -%}
+        #     {{-'\u26A0\uFE0F'}} Plex är nere...
+        #   {%- endif %}
+
+    # - unique_id: updates
+    #   state: template
+    #   attributes:
+    #     unifi: >
+    #       {% set installed = states('sensor.template_udm_version') %}
+    #       {% set url = 'https://community.ui.com/releases?q=dream+machine' %}
+    #       {% if is_state('binary_sensor.template_udm_upgradable', 'on') %}
+    #         <b><a href="#" onclick="window.open('{{ url }}');">UniFi Dream Machine ({{ installed }})</a></b> uppdatering tillgänglig
+    #       {% endif %}
+
+    # - unique_id: udm_cpu
+    #   icon: mdi:chip
+    #   unit_of_measurement: '%'
+    #   state: >
+    #     {{ states('sensor.udm_unifios').split('|\n')[0] | default }}
+    #   attributes:
+    #     friendly_name: Processor
+
+    # - unique_id: udm_cpu_temp
+    #   icon: mdi:thermometer
+    #   unit_of_measurement: '°C'
+    #   state: >
+    #     {{ states('sensor.udm_unifios').split('|\n')[1] | default }}
+    #   attributes:
+    #     friendly_name: Processortemperatuur
+
+    # - unique_id: udm_mem
+    #   icon: mdi:memory
+    #   unit_of_measurement: '%'
+    #   state: >
+    #     {{ states('sensor.udm_unifios').split('|\n')[2] | default }}
+    #   attributes:
+    #     friendly_name: Geheugen
+
+    # - unique_id: udm_disk
+    #   icon: mdi:harddisk
+    #   unit_of_measurement: '%'
+    #   state: >
+    #     {{ states('sensor.udm_unifios').split('|\n')[3] | default }}
+    #   attributes:
+    #     friendly_name: Opslag
+
+    # - unique_id: udm_uptime
+    #   device_class: timestamp
+    #   state: >
+    #     {{ states('sensor.udm_unifios').split('|\n')[5] | default }}
+    #   attributes:
+    #     friendly_name: Laatste herstart
+
+    # - unique_id: udm_version
+    #   icon: mdi:router-wireless
+    #   state: >
+    #     {{ states('sensor.udm_unifios').split('|\n')[6] | default }}
+    #   attributes:
+    #     friendly_name: Version
 
     - unique_id: hass_version
       icon: mdi:home-assistant

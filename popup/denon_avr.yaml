@@ -1,0 +1,99 @@
+action: fire-dom-event
+browser_mod:
+  command: popup
+  title: Denon AVR
+  style:
+    hui-vertical-stack-card:
+      $: |
+        hui-horizontal-stack-card {
+          padding: 0em 2em 2.3em 2em;
+        }
+      $hui-horizontal-stack-card$: |
+        #root {
+          justify-content: space-evenly;
+        }
+  card:
+    type: vertical-stack
+    cards:
+      - type: entities
+        state_color: true
+        show_header_toggle: false
+        card_mod:
+          class: content
+        entities:
+
+          - entity: media_player.denonavr_x4100w
+            name: Denon
+            secondary_info: last-changed
+          - entity: script.samsung_tv_energy_saving
+
+          - entity: select.hdmi_samsung
+
+      - type: horizontal-stack
+        cards:
+
+          - type: custom:button-card
+            entity: media_player.denonavr_x4100w
+            icon: mdi:volume-mute
+            tap_action:
+              action: call-service
+              service: media_player.volume_mute
+              service_data:
+                entity_id: >
+                  [[[ return entity.entity_id; ]]]
+                is_volume_muted: >
+                  [[[ return entity.attributes.is_volume_muted ? 'false' : 'true'; ]]]
+            template: icon_only
+
+          - type: custom:button-card
+            entity: media_player.denonavr_x4100w
+            icon: mdi:volume-minus
+            tap_action:
+              action: call-service
+              service: media_player.volume_down
+              service_data:
+                entity_id: >
+                  [[[ return entity.entity_id; ]]]
+            template: icon_only
+
+          - type: custom:button-card
+            entity: media_player.denonavr_x4100w
+            icon: mdi:volume-plus
+            tap_action:
+              action: call-service
+              service: media_player.volume_up
+              service_data:
+                entity_id: >
+                  [[[ return entity.entity_id; ]]]
+            template: icon_only
+      
+      - type: custom:button-card
+        name: Spotify openen
+        icon: mdi:spotify
+        styles:
+          card:
+            - width: max-content
+            - filter: >
+                [[[
+                  return entity.state === '0' ?
+                    'opacity(30%)' :
+                    'drop-shadow(3px 3px 5px #00000050)';
+                ]]]
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            title: Spotify media library
+            style: >
+              :host .content {
+                width: 85em;
+              }
+            card:
+              type: iframe
+              url: /media-browser
+              aspect_ratio: 65%
+              style: |
+                ha-card {
+                  border-radius: 0 0 1em 1em;
+                }
+        template: icon_name

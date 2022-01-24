@@ -41,7 +41,7 @@ frontend:
       #custom variables
       ha-card-background-color: rgba(34,38,39,0.9)
       ha-card-header-background-color: rgba(48,52,52,0.8)
-      custom-layout-card-padding: 3.3vw
+      custom-layout-card-padding: 2.6vw
       custom-button-card-border-radius: 8%
       sidebar-time-font-size: 5vw
       sidebar-time-line-height: 4vw
@@ -81,7 +81,7 @@ frontend:
             $: |
               /* default */
               h1 {
-                font-size: 2.4vw !important;
+                font-size: 2.2vw !important;
                 line-height: 0 !important;
                 font-family: SF Text !important;
                 font-weight: 500 !important;
@@ -170,7 +170,7 @@ frontend:
           $: |
             #root {
               width: 100%;
-              padding: 0 13% 25% 13%;
+              padding: 0 13% 10% 13%;
             }
 
             /* phone */
@@ -222,7 +222,7 @@ frontend:
         .header .card-header {
           font-family: SF Text;
           letter-spacing: 0.005em;
-          font-size: 1.6em;
+          font-size: 1.5em;
           font-weight: 500;
           padding: 1em 0 0 1.68em;
           line-height: initial;
