@@ -40,19 +40,17 @@ browser_mod:
     type: custom:layout-card
     layout_type: custom:grid-layout
     layout:
-      grid-template-columns: repeat(3, 1fr)
+      grid-template-columns: repeat(1, 1fr)
       grid-template-rows: 1fr
       grid-template-areas: |
-        "hass tablet nas"
+        "hass"
       mediaquery:
         #phone
         "(max-width: 800px)":
           grid-template-columns: 1fr
-          grid-template-rows: repeat(3, 1fr)
+          grid-template-rows: repeat(1, 1fr)
           grid-template-areas: |
             "hass"
-            "tablet"
-            "nas"
     cards:
 
       #################################################
@@ -74,15 +72,10 @@ browser_mod:
             }
         entities:
           - entity: sensor.template_hass_version
-
-          - entity: switch.watchtower
-
-          - entity: sensor.template_hass_dev_release
-
-          - entity: sensor.databas
-
-          - entity: sensor.home_assistant_log
-
+#          - entity: switch.watchtower
+          # - entity: sensor.template_hass_dev_release
+#          - entity: sensor.databas
+#          - entity: sensor.home_assistant_log
           - entity: sensor.uptime
 
           - type: custom:bar-card
