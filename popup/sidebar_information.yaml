@@ -127,7 +127,7 @@ browser_mod:
                   services: |
                     [[[
                       hass.callService('browser_mod', 'toast', {
-                        message: 'Startar om Home Assistant...'
+                        message: 'Home Assistant word opnieuw opgestart...'
                       });
                       hass.callService('homeassistant', 'restart');
                     ]]]

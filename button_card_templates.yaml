@@ -18,7 +18,7 @@
     show_state: true
     show_icon: false
     state_display: >
-      [[[ if (variables.state === true) return 'Okänt'; ]]]
+      [[[ if (variables.state === true) return 'Onbekend'; ]]]
     tap_action:
       ui_sound_tablet: |
         [[[
@@ -564,7 +564,7 @@
           return 'Ja';
         }
         if (variables.state === 'not_home') {
-          return 'Nej';
+          return 'Nee';
         }
         return variables.state;
       ]]]
@@ -688,9 +688,9 @@
     state_display: >
       [[[
         if (entity.attributes.media_title === 'Nothing playing' || entity.attributes.media_title === 'No title' && variables.state === 'paused') {
-          return 'Inget spelas';
+          return 'Niets af te spelen';
         }
-        return entity.attributes.media_title === 'No title' && variables.state === 'playing' ? 'Ingen titel' : entity.attributes.media_title;
+        return entity.attributes.media_title === 'No title' && variables.state === 'playing' ? 'Geen titel' : entity.attributes.media_title;
       ]]]
     custom_fields:
       blur: >

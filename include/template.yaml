@@ -78,30 +78,30 @@ template:
           </span>
         date: |
           <font color='#6a7377'><b>
-          {%- if strptime(states('sensor.date'), '%Y-%m-%d').day != null %}
-          {%- set days = ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'] %}
-          {%- set months = ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 
-          'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'] %}
+          {%- if now().day != null %}
+          {%- set days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'] %}
+          {%- set months = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 
+          'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'] %}
             {{- days[now().weekday()] }}<br>
-            {{- strptime(states('sensor.date'), '%Y-%m-%d').day }} {{ months[now().month-1] }}
+            {{- now().day }} {{ months[now().month-1] }}
           {%- endif -%}
           </b></font>
         greet: |
           <b>
           {%- set time = now().hour %}
-          {%- if time <= 1 -%} God natt {{'\U0001F611'}}
-          {%- elif time <= 3 -%} God natt {{'\U0001F62A'}}
-          {%- elif time <= 5 -%} God natt {{'\U0001F634'}}
-          {%- elif time <= 7 -%} God morgon {{'\U0001F4A9'}}
-          {%- elif time <= 9 -%} God morgon {{'\u2615\uFE0F'}}
-          {%- elif time <= 10 -%} God morgon {{'\U0001F642'}}
-          {%- elif time <= 13 -%} God dag {{'\U0001F60A'}}
-          {%- elif time <= 15 -%} God dag {{'\U0001F60E'}}
-          {%- elif time <= 17 -%} God dag {{'\U0001F44B\U0001F3FB'}}
-          {%- elif time <= 19 -%} God kväll {{'\U0001F44B\U0001F3FB'}}
-          {%- elif time <= 22 -%} God kväll {{'\U0001F60C'}}
-          {%- elif time <= 23 -%} God kväll {{'\U0001F974'}}
-          {%- else %} God kväll {{'\U0001F974'}}
+          {%- if time <= 1 -%} Goede nacht {{'\U0001F611'}}
+          {%- elif time <= 3 -%} Goede nacht {{'\U0001F62A'}}
+          {%- elif time <= 5 -%} Goede nacht {{'\U0001F634'}}
+          {%- elif time <= 7 -%} Goedemorgen {{'\U0001F4A9'}}
+          {%- elif time <= 9 -%} Goedemorgen {{'\u2615\uFE0F'}}
+          {%- elif time <= 10 -%} Goedemorgen {{'\U0001F642'}}
+          {%- elif time <= 13 -%} Goededag {{'\U0001F60A'}}
+          {%- elif time <= 15 -%} Goededag {{'\U0001F60E'}}
+          {%- elif time <= 17 -%} Goededag {{'\U0001F44B\U0001F3FB'}}
+          {%- elif time <= 19 -%} Goedenavond {{'\U0001F44B\U0001F3FB'}}
+          {%- elif time <= 22 -%} Goedenavond {{'\U0001F60C'}}
+          {%- elif time <= 23 -%} Goedenavond {{'\U0001F974'}}
+          {%- else %} Goedenavond {{'\U0001F974'}}
           {%- endif -%}
           </b>
         active: |
@@ -176,17 +176,14 @@ template:
             {{ '\U0001F4EC' }} <font color='#6a7377'><b>Brevlåda ({{ mailbox }})</b></font>
           {% endif %}
         weather: |
-          {%- set temperature = states('sensor.dark_sky_temperature') %}
-          {%- set apparent = states('sensor.dark_sky_apparent_temperature') | round %}
-          {%- set precip = states('sensor.dark_sky_precip_probability') | round %}
-          {% if not is_state('sensor.dark_sky_temperature', 'unknown') %}
-            {%- if temperature | float(default=0) <= 0.0 -%}
-              Känns som {{ apparent }}° med {{ precip }}% risk för snö {{'\u2744\uFE0F'}}
-            {%- elif temperature | float(default=0) > 0.0 -%} 
-              Känns som {{ apparent}}° med {{ precip }}% risk för regn {{ '\u2614\uFE0F' if precip > 30 }}
-            {%- endif %}
+          {%- set temperature = states('sensor.buienradar_temperature') | round %}
+          {%- set weather_state = states('sensor.buienradar_symbol') %}
+          {%- set apparent = states('sensor.buienradar_feel_temperature') | round %}
+          {%- set precip = states('sensor.buienradar_precipitation') %}
+          {% if not is_state('sensor.buienradar_temperature', 'unknown') %}
+              Het is {{weather_state}} en {{temperature}}°c. Voelt als {{ apparent }}°c
           {%- else %}
-            Kan inte läsa in väderinformation...
+            Kan weersinformatie niet laden...
           {%- endif %}
         battery: |
           {% set entities = states.sensor 
@@ -195,7 +192,7 @@ template:
             | map(attribute = 'entity_id') | list %}
           {%- for sensor in entities if states(sensor) != 'unknown' and states(sensor) !=
           'unavailable' and states(sensor) != 'None' and states(sensor) | int(default=0) <= 5 %}
-            {%- if loop.first %} {{-'\u26A0\uFE0F'}} Batteri {% else %}, {% endif -%}
+            {%- if loop.first %} {{-'\u26A0\uFE0F'}} Batterij {% else %}, {% endif -%}
             {{ state_attr(sensor, 'friendly_name') }} {{ states(sensor) }}%
           {%- endfor %}
         mathem: |
@@ -206,23 +203,27 @@ template:
             {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
             {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
             {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
-            {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A') 
-            | replace('Monday', 'Måndag')
-            | replace('Tuesday', 'Tisdag')
-            | replace('Wednesday', 'Onsdag')
-            | replace('Thursday', 'Torsdag')
-            | replace('Friday', 'Fredag')
-            | replace('Saturday', 'Lördag')
-            | replace('Sunday', 'Söndag') %}
-            {%- if count <= 0.0 -%}
-              {{'\U0001F6D2'}} Mathem idag mellan {{ time }}-{{ time_end }}
+            {%- set day = as_timestamp(start_time) | timestamp_custom('%A') 
+                      | replace('Monday', 'Maandag')
+                      | replace('Tuesday', 'Disndag')
+                      | replace('Wednesday', 'Woensdag')
+                      | replace('Thursday', 'Donderdag')
+                      | replace('Friday', 'Vrijdag')
+                      | replace('Saturday', 'Zaterdag')
+                      | replace('Sunday', 'Zondag') %}
+            {%- if count <= -1.0 -%}
+              Er is geen lopende bestelling bij Picnic
+            {%- elif count <= 0.0 -%}
+              {{'\U0001F6D2'}} Picnic komt vandaag tussen {{ time }}-{{ time_end }}
             {%- elif count <= 1.0 -%}
-              Mathem imorgon mellan {{ time }}-{{ time_end }}
+              Picnic komt morgen tussen {{ time }}-{{ time_end }}
             {%- elif count <= 2.0 -%}
-              Mathem i övermorgon mellan {{ time }}-{{ time_end }}
+              Picnic komt overmorgen tussen {{ time }}-{{ time_end }}
             {%- else -%}
-              Mathem om {{ (count + hours) | round }} dagar på {{ day }} mellan {{ time }}-{{ time_end }}
+              Picnic komt over {{ (count + hours) | round }} dagen op {{ day }} tussen {{ time }}-{{ time_end }}
             {%- endif %}
+          {%- else -%}
+            Er is geen lopende bestelling bij Picnic
           {%- endif %}
         plex: |
           {% if is_state('binary_sensor.plex_availability', 'off') -%}
@@ -345,27 +346,11 @@ template:
     - unique_id: hass_version
       icon: mdi:home-assistant
       state: >
-        {{ 'Senaste' if states('sensor.hass_version_installed') == 
+        {{ 'Laatste' if states('sensor.hass_version_installed') == 
         states('sensor.hass_version_latest') else states('sensor.hass_version_latest') }}
       attributes:
         friendly_name: >
-          Installerad {{ states('sensor.hass_version_installed') }}
-
-    - unique_id: hass_dev_release
-      icon: mdi:dev-to
-      device_class: timestamp
-      state: >
-        {{ (as_timestamp(state_attr('calendar.home_assistant_devs', 'start_time'), default=0) + 60*60*18) | timestamp_local(default) }}
-      attributes:
-        friendly_name: >
-          {% set release = state_attr('calendar.home_assistant_devs','message') %}
-          {% if release == 'Home Assistant Core Beta Release' %}
-            Nästa beta
-          {% elif release == 'Home Assistant Core Release' %}
-            Nästa release
-          {% else %}
-            {{ release }}
-          {% endif %}
+          Geïnstalleerd {{ states('sensor.hass_version_installed') }}
 
     - unique_id: hacs_version
       state: >
@@ -378,7 +363,6 @@ template:
         {{ (state_attr(entity_id, 'memory_stats')['usage'] / 
         state_attr(entity_id, 'memory_stats')['limit'] * 100) | round(1) | default(0) }}
       attributes:
-        friendly_name: Minne
 
     - unique_id: printer_status
       icon: mdi:printer-wireless
@@ -396,6 +380,7 @@ template:
         {{ prt('Off', 'Av') }}
       attributes:
         friendly_name: Skrivare
+        friendly_name: Geheugen
 
     - unique_id: domain_counter
       state: >
