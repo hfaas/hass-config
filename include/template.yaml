@@ -1,16 +1,16 @@
 template:
   select:
-    - name: hdmi_samsung
+    - name: spotify_denon
       state: >
-        {% set source = state_attr('media_player.samsung_tv', 'source') %}
-        {{ 'Apple' if source == None else source }}
+        {% set source = state_attr('media_player.denonavr_x4100w', 'source') %}
+        {{ 'Spotify' if source == None else source }}
       options: >
-        {% set source_list = state_attr('media_player.samsung_tv', 'source_list') %}
-        {{ ['Apple'] if source_list == None else source_list }}
+        {% set source_list = state_attr('media_player.denonavr_x4100w', 'source_list') %}
+        {{ ['Spotify'] if source_list == None else source_list }}
       select_option:
         service: media_player.select_source
         target:
-          entity_id: media_player.samsung_tv
+          entity_id: media_player.denonavr_x4100w
         data:
           source: >
             {{ option }}

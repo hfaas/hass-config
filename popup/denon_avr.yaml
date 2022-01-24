@@ -21,13 +21,10 @@ browser_mod:
         card_mod:
           class: content
         entities:
-
           - entity: media_player.denonavr_x4100w
             name: Denon
             secondary_info: last-changed
-          - entity: script.samsung_tv_energy_saving
-
-          - entity: select.hdmi_samsung
+          - entity: select.spotify_denon
 
       - type: horizontal-stack
         cards:
