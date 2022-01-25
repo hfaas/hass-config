@@ -24,17 +24,6 @@ template:
         {{ (installed != latest and installed != 'unknown' and latest != 'unknown')
         or (states('sensor.hacs') != 'unknown' and states('sensor.hacs') | int(default=0) > 0) }}
 
-    - unique_id: imac_vpn
-      device_class: connectivity
-      icon: >
-        mdi:shield-{{ 'alert' if is_state('switch.computer_imac', 'on') and 
-        states('sensor.imac_ip') == states('sensor.myip') else 'check' }}
-      state: >
-        {{ is_state('switch.computer_imac', 'on') and 
-        states('sensor.imac_ip') != states('sensor.myip') }}
-      attributes:
-        friendly_name: VPN
-
     # - unique_id: udm_internet
     #   icon: mdi:wan
     #   device_class: connectivity
