@@ -148,23 +148,11 @@ views:
               - icon_nanoleaf
 
           - type: custom:button-card
-            entity: climate.mylke_woonkamer
-            name: Woonkamer
-            hold_action:
-              !include popup/livingroom_climate.yaml
+            entity: cover.gordijnen_achterzijde
+            name: Gordijn
             template:
-              - base
-              - icon_climate
-              - climate
-            variables:
-              circle_input: >
-                [[[
-                  if (entity) {
-                    return entity.state == 'cool' ?
-                      entity.attributes.temperature :
-                      entity.attributes.current_temperature;
-                  }
-                ]]]
+              - curtain
+              - icon_curtains
 
       #################################################
       #                                               #
@@ -192,6 +180,13 @@ views:
             template:
               - base
               - icon_lamp_table
+
+          - type: custom:button-card
+            entity: light.mechanische_ventilator
+            name: Ventilator
+            template:
+              - fan
+              - icon_fan
 
       #################################################
       #                                               #
@@ -225,13 +220,6 @@ views:
           grid-area: other
         columns: 2
         cards:
-
-          - type: custom:button-card
-            entity: light.mechanische_ventilator
-            name: Ventilator
-            template:
-              - light_dimable
-              - icon_fan2
 
           - type: custom:button-card
             entity: switch.hal_lamp_aangezet

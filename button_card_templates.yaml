@@ -708,55 +708,67 @@
 
   #################################################
   #                                               #
-  #                    PERSON                     #
+  #                     FAN                       #
   #                                               #
   #################################################
 
-  person:
+  fan:
     template:
       - base
       - circle
-    state_display: >
-      [[[
-        if (variables.state === 'home') {
-          return 'Ja';
-        }
-        if (variables.state === 'not_home') {
-          return 'Nee';
-        }
-        return variables.state;
-      ]]]
-    triggers_update: sensor.time
-    styles:
-      custom_fields:
-        icon:
-          - clip-path: circle()
-          - width: 79%
-          - pointer-events: none
-          - display: grid
-    custom_fields:
-      icon: >
-        [[[ return entity === undefined ? null : `<img src="${states[entity.entity_id].attributes.entity_picture}" width="100%">`; ]]]
-      circle: >
-        [[[
-          if (entity) {
-            let time = c => {
-              let s = (c/1e3), m = (c/6e4), h = (c/36e5), d = (c/864e5);
-              return s < 60 ? parseInt(s) + 's' : m < 60 ? parseInt(m) + 'm' : h < 24 ? parseInt(h) + 'h' : parseInt(d) + 'd';
-            };
-            let last_changed = states[variables.retain] == null || states[variables.retain].state == 'unavailable'
-                ? time(Date.now() - Date.parse(states[entity.entity_id].last_changed))
-                : time(Date.now() - Date.parse(states[variables.retain].state)),
-              stroke = variables.state === 'home' ? '#b2b2b2' : 'none',
-              fill = variables.state !== 'home' ? 'rgba(255,255,255,0.04)' : 'none';
-            return `
-              <svg viewBox="0 0 50 50">
-                <circle cx="25" cy="25" r="20.5" stroke="${stroke}" stroke-width="1.5" fill="${fill}" />
-                <text x="50%" y="54%" fill="#8d8e90" font-size="14" text-anchor="middle" alignment-baseline="middle" dominant-baseline="middle">${last_changed}</text>
-              </svg>
-            `;
-          }
-        ]]]
+    variables:
+      circle_input: >
+        [[[ return entity === undefined || Math.round(entity.attributes.brightness / 2.54); ]]]
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        command: popup
+        title: >
+          [[[ return entity.attributes.friendly_name; ]]]
+        card:
+          type: custom:light-popup-card
+          entity: >
+            [[[ return entity.entity_id ]]]
+          icon: none
+          fullscreen: false
+          brightnessWidth: 130px
+          brightnessHeight: 360px
+          borderRadius: 1.7em
+          sliderColor: '#c7c7c7'
+          sliderTrackColor: rgba(25, 25, 25, 0.9)
+          displayType: slider
+
+  #################################################
+  #                                               #
+  #                   CURTAIN                     #
+  #                                               #
+  #################################################
+
+  curtain:
+    template:
+      - base
+      - circle
+    variables:
+      circle_input: >
+        [[[ return entity === undefined || Math.round(entity.attributes.current_position); ]]]
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        command: popup
+        title: >
+          [[[ return entity.attributes.friendly_name; ]]]
+        card:
+          type: custom:light-popup-card
+          entity: >
+            [[[ return entity.entity_id ]]]
+          icon: none
+          fullscreen: false
+          brightnessWidth: 130px
+          brightnessHeight: 360px
+          borderRadius: 1.7em
+          sliderColor: '#c7c7c7'
+          sliderTrackColor: rgba(25, 25, 25, 0.9)
+          displayType: slider
 
   #################################################
   #                                               #
@@ -1743,7 +1755,7 @@
           `;
         ]]]
 
-  icon_fan2:
+  icon_fan:
     styles:
       custom_fields:
         icon:
