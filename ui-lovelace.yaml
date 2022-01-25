@@ -206,46 +206,12 @@ views:
         columns: 1
         cards:
 
-          - type: custom:swipe-card
-            start_card: 1
-            parameters:
-              roundLengths: true
-              effect: coverflow
-              speed: 650
-              spaceBetween: 20
-              threshold: 7
-              coverflowEffect:
-                rotate: 80
-                depth: 300
-            cards:
-
-              - type: horizontal-stack
-                cards:
-
-                  - type: custom:button-card
-                    entity: media_player.spotify_mylke_baas
-                    name: Spotify
-                    template:
-                      - conditional_media
-                      - icon_spotify
-
-              - type: grid
-                columns: 2
-                cards:
-
-                  - type: custom:button-card
-                    entity: media_player.vardagsrum
-                    name: Woonkamer
-                    template:
-                      - media
-                      - icon_plex
-
-                  - type: custom:button-card
-                    entity: media_player.spotify_mylke_baas
-                    name: Spotify
-                    template:
-                      - media
-                      - icon_spotify
+          - type: custom:button-card
+            entity: media_player.spotify_mylke_baas
+            name: Spotify
+            template:
+              - conditional_media
+              - icon_spotify
 
       #################################################
       #                                               #
