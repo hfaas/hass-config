@@ -290,7 +290,7 @@
         display: flex !important;
       }
       #name {
-        padding: 1.8vw 2.5vw 0 var(--custom-layout-card-padding);
+        padding: 1.8vw 2.2vw 0 2.2vw;
         white-space: normal;
         text-align: left;
       }
