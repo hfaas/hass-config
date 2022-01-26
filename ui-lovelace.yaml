@@ -131,7 +131,7 @@ views:
               - icon_shade
 
           - type: custom:button-card
-            entity: light.living_colors
+            entity: light.living_colors_2
             # hold_action:
             #   !include popup/vardagsrum_balkong.yaml
             template:
