@@ -86,7 +86,7 @@ frontend:
                 font-family: SF Text !important;
                 font-weight: 500 !important;
                 color: rgba(255, 255, 255, 0.8) !important;
-                padding: 0.8vw 0 1.5vw 0 !important;
+                padding: 0.5vw 0 1.5vw 0 !important;
               }
               /* portrait */
               @media screen and (max-width: 1200px) {

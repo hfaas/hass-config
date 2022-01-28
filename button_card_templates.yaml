@@ -290,7 +290,7 @@
         display: flex !important;
       }
       #name {
-        padding: 1.8vw 2.2vw 0 2.2vw;
+        padding: 0.5vw 2.2vw 0 2.2vw;
         white-space: normal;
         text-align: left;
       }
