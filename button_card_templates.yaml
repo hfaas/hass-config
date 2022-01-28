@@ -354,7 +354,7 @@
     custom_fields:
       circle: >
         [[[
-          if (variables.state === 'on') {
+          if (variables.state === 'on' || variables.state === 'open' || variables.state === 'closed') {
             let input = variables.circle_input,
               radius = 20.5,
               circumference = radius * 2 * Math.PI;
@@ -748,27 +748,32 @@
     template:
       - base
       - circle
+      - loader
     variables:
       circle_input: >
-        [[[ return entity === undefined || Math.round(entity.attributes.current_position); ]]]
+        [[[ return entity === undefined || entity.attributes.current_position; ]]]
     tap_action:
+      action: call-service
+      service: >
+        [[[ return variables.state === 'closed' || variables.state === 'false' ? 'cover.open_cover' : 'cover.close_cover'; ]]]
+      service_data:
+        entity_id: >
+          [[[ return entity === undefined || entity.entity_id; ]]]
+    hold_action: 
       action: fire-dom-event
       browser_mod:
         command: popup
         title: >
           [[[ return entity.attributes.friendly_name; ]]]
         card:
-          type: custom:light-popup-card
-          entity: >
-            [[[ return entity.entity_id ]]]
-          icon: none
-          fullscreen: false
-          brightnessWidth: 130px
-          brightnessHeight: 360px
-          borderRadius: 1.7em
-          sliderColor: '#c7c7c7'
-          sliderTrackColor: rgba(25, 25, 25, 0.9)
-          displayType: slider
+          type: entities
+          entities:
+            - entity: >
+                [[[ return entity.entity_id ]]]
+              type: custom:slider-entity-row
+              step: 1
+              full_row: true
+          show_header_toggle: false
 
   #################################################
   #                                               #

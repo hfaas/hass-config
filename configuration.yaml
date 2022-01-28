@@ -42,3 +42,9 @@ spotify:
 # Browser_mod config
 browser_mod:
   prefix: browser_
+
+# Slide curtain integration
+slide:
+  username: !secret slide_username
+  password: !secret slide_password
+  invert_position: true

@@ -148,7 +148,7 @@ views:
               - icon_nanoleaf
 
           - type: custom:button-card
-            entity: cover.gordijnen_achterzijde
+            entity: cover.gordijnen_woonkamer
             name: Gordijn
             template:
               - curtain
