@@ -7,7 +7,7 @@ views:
       #default
       grid-gap: var(--custom-layout-card-padding)
       grid-template-columns: repeat(4, 1fr) 0
-      grid-template-rows: 0 repeat(2, fit-content(100%)) 0fr
+      grid-template-rows: 0 repeat(2, fit-content(100%)) 0
       grid-template-areas: |
         "sidebar  .           .           .           ."
         "sidebar  kitchen     livingroom  livingroom  ."
