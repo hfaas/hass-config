@@ -101,11 +101,11 @@ template:
         picnic: |
           {%- set start_time = states('sensor.picnic_last_order_eta_start') %}
           {%- set end_time = states('sensor.picnic_last_order_eta_end') %}
-          {% if start_time == None or start_time == 'unknown' %}
+          {% if start_time == None or start_time == 'unknown' or start_time != 'unavailable' %}
             {%- set start_time = states('sensor.picnic_last_order_slot_start') %}
             {%- set end_time = states('sensor.picnic_last_order_slot_end') %}
           {%- endif %}
-          {% if start_time != None and start_time != 'unknown' %}
+          {% if start_time != None and start_time != 'unknown' and start_time != 'unavailable' %}
             {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
             {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
             {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
